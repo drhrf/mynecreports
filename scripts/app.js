@@ -6,11 +6,10 @@ import {
   onAuthStateChanged, 
   signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 // Configuração do Firebase
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCqJsdgeIwSmBGajLeIf6JH55jGjGFpBl0",
   authDomain: "my-report-nec.firebaseapp.com",
@@ -24,7 +23,14 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+
+// Firestore com detecção automática de long-polling (evita erro de "client is offline")
+const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+  // Se ainda tiver problema, troque a linha acima por:
+  // experimentalForceLongPolling: true,
+});
+
 const storage = getStorage(app);
 
 // Elementos da interface
