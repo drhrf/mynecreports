@@ -15,7 +15,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCqJsdgeIwSmBGajLeIf6JH55jGjGFpBl0",
   authDomain: "my-report-nec.firebaseapp.com",
   projectId: "my-report-nec",
-  storageBucket: "my-report-nec.appspot.com",
+  storageBucket: "my-report-nec.firebasestorage.app",
   messagingSenderId: "464951551947",
   appId: "1:464951551947:web:d68d634794f5c3f465784e",
   measurementId: "G-89HBDDZ3R1"
