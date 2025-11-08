@@ -68,23 +68,26 @@ onAuthStateChanged(auth, async (user) => {
     userSection.classList.remove('hidden');
     userEmail.textContent = user.email;
 
-    const docRef = doc(db, "users", user.uid, "documents", "main");
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "users", user.uid, "documents", "main");
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-  const path = docSnap.data().pdfPath;
-  console.log("pdfPath do Firestore:", path);
-  try {
-    const url = await getDownloadURL(ref(storage, path));
-    console.log("URL gerada:", url);
-    pdfLink.innerHTML = `<a href="${url}" target="_blank">📄 Baixar meu relatório</a>`;
-  } catch (err) {
-    console.error("Erro no getDownloadURL:", err);
-    pdfLink.textContent = "Erro ao carregar o relatório.";
-  }
-} else {
-  pdfLink.textContent = "Nenhum PDF disponível.";
-}
+      if (!docSnap.exists()) {
+        console.warn("Documento Firestore não encontrado para UID:", user.uid);
+        pdfLink.textContent = "Nenhum PDF disponível.";
+        return;
+      }
+
+      const path = docSnap.data().pdfPath;
+      console.log("pdfPath do Firestore:", path);
+
+      const url = await getDownloadURL(ref(storage, path));
+      console.log("URL gerada:", url);
+      pdfLink.innerHTML = `<a href="${url}" target="_blank">📄 Baixar meu relatório</a>`;
+    } catch (err) {
+      console.error("Erro ao carregar relatório:", err);
+      pdfLink.textContent = "Erro ao carregar o relatório.";
+    }
   } else {
     authSection.classList.remove('hidden');
     userSection.classList.add('hidden');
