@@ -72,12 +72,19 @@ onAuthStateChanged(auth, async (user) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const path = docSnap.data().pdfPath;
-      const url = await getDownloadURL(ref(storage, path));
-      pdfLink.innerHTML = `<a href="${url}" target="_blank">📄 Baixar meu relatório</a>`;
-    } else {
-      pdfLink.textContent = "Nenhum PDF disponível.";
-    }
+  const path = docSnap.data().pdfPath;
+  console.log("pdfPath do Firestore:", path);
+  try {
+    const url = await getDownloadURL(ref(storage, path));
+    console.log("URL gerada:", url);
+    pdfLink.innerHTML = `<a href="${url}" target="_blank">📄 Baixar meu relatório</a>`;
+  } catch (err) {
+    console.error("Erro no getDownloadURL:", err);
+    pdfLink.textContent = "Erro ao carregar o relatório.";
+  }
+} else {
+  pdfLink.textContent = "Nenhum PDF disponível.";
+}
   } else {
     authSection.classList.remove('hidden');
     userSection.classList.add('hidden');
