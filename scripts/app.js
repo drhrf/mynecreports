@@ -26,11 +26,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Firestore com long-polling automático (evita "client is offline")
+// Force long-polling para contornar bloqueios de rede/firewall
 const db = initializeFirestore(app, {
-  experimentalAutoDetectLongPolling: true,
-  // Se ainda der problema de offline, pode trocar a linha de cima por:
-  // experimentalForceLongPolling: true,
+  experimentalForceLongPolling: true,
 });
 
 const storage = getStorage(app);
