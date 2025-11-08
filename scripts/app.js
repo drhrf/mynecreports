@@ -10,14 +10,15 @@ import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 // Configuração do Firebase
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCqJsgeIwSmBGajLeIf6JH55jGjGFpB10",
+  apiKey: "AIzaSyCqJsdgeIwSmBGajLeIf6JH55jGjGFpBl0",
   authDomain: "my-report-nec.firebaseapp.com",
   projectId: "my-report-nec",
-  storageBucket: "my-report-nec.appspot.com",
+  storageBucket: "my-report-nec.firebasestorage.app",
   messagingSenderId: "464951551947",
   appId: "1:464951551947:web:d68d634794f5c3f465784e",
-  measurementId: "G-89HBDD23R1"
+  measurementId: "G-89HBDDZ3R1"
 };
 
 // Inicializa Firebase
