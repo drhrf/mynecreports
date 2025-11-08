@@ -9,6 +9,8 @@ import {
 import { initializeFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
+console.log("app.js carregado");
+
 // Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCqJsdgeIwSmBGajLeIf6JH55jGjGFpBl0",
@@ -24,10 +26,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Firestore com detecção automática de long-polling (evita erro de "client is offline")
+// Firestore com long-polling automático (evita "client is offline")
 const db = initializeFirestore(app, {
   experimentalAutoDetectLongPolling: true,
-  // Se ainda tiver problema, troque a linha acima por:
+  // Se ainda der problema de offline, pode trocar a linha de cima por:
   // experimentalForceLongPolling: true,
 });
 
@@ -42,33 +44,43 @@ const pdfLink = document.getElementById('pdfLink');
 const userEmail = document.getElementById('userEmail');
 const logoutBtn = document.getElementById('logoutBtn');
 
-// Registro
-registerForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    alert("Conta criada com sucesso!");
-  } catch (error) {
-    alert("Erro: " + error.message);
-  }
+console.log("Elementos carregados:", {
+  registerForm, loginForm, userSection, authSection, pdfLink, userEmail, logoutBtn
 });
 
+// Registro
+if (registerForm) {
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Conta criada com sucesso!");
+    } catch (error) {
+      alert("Erro: " + error.message);
+    }
+  });
+}
+
 // Login
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    alert("Erro: " + error.message);
-  }
-});
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      alert("Erro: " + error.message);
+    }
+  });
+}
 
 // Estado de autenticação
 onAuthStateChanged(auth, async (user) => {
+  console.log("onAuthStateChanged disparado. user =", user);
+
   if (user) {
     authSection.classList.add('hidden');
     userSection.classList.remove('hidden');
@@ -76,6 +88,8 @@ onAuthStateChanged(auth, async (user) => {
 
     try {
       const docRef = doc(db, "users", user.uid, "documents", "main");
+      console.log("Buscando doc em:", docRef.path);
+
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
@@ -101,6 +115,8 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // Logout
-logoutBtn.addEventListener('click', async () => {
-  await signOut(auth);
-});
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+  });
+}
